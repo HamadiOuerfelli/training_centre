@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nexora Academy — Centre de Formation Professionnelle</title>
 <meta name="description" content="Nexora Academy — formations professionnelles certifiantes en tech, management et langues.">
+<script>
+(function(){
+  try{
+    var t = localStorage.getItem('theme');
+    if(!t){ t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+    document.documentElement.setAttribute('data-theme', t);
+    var l = localStorage.getItem('lang') || 'fr';
+    document.documentElement.setAttribute('lang', l);
+  }catch(e){}
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,8 +24,10 @@
     --ink:#0f1229;
     --ink-soft:#4b4f6b;
     --bg:#f7f8fc;
+    --bg-alt:#f1f2fb;
     --card:#ffffff;
     --line:#e7e9f5;
+    --header-bg:rgba(247,248,252,.75);
     --primary-1:#5b5ef4;
     --primary-2:#8b5cf6;
     --primary-3:#22d3ee;
@@ -26,6 +39,18 @@
     --shadow-lg: 0 25px 60px rgba(30,32,80,.16);
     --radius: 20px;
   }
+  :root[data-theme="dark"]{
+    --ink:#eef0fb;
+    --ink-soft:#a2a5c9;
+    --bg:#0c0e1f;
+    --bg-alt:#11142b;
+    --card:#161933;
+    --line:#272b52;
+    --header-bg:rgba(12,14,31,.75);
+    --shadow-sm: 0 2px 10px rgba(0,0,0,.35);
+    --shadow-md: 0 10px 30px rgba(0,0,0,.45);
+    --shadow-lg: 0 25px 60px rgba(0,0,0,.6);
+  }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{
@@ -34,6 +59,7 @@
     color:var(--ink);
     background:var(--bg);
     overflow-x:hidden;
+    transition:background .4s ease, color .4s ease;
   }
   h1,h2,h3,h4,.brand{font-family:'Poppins',system-ui,sans-serif;}
   img,svg{max-width:100%;display:block;}
@@ -82,7 +108,7 @@
   }
   header.scrolled{
     padding:10px 0;
-    background:rgba(247,248,252,.75);
+    background:var(--header-bg);
     backdrop-filter:blur(14px);
     -webkit-backdrop-filter:blur(14px);
     box-shadow:0 4px 24px rgba(20,20,60,.08);
@@ -104,7 +130,17 @@
     transition:all .3s ease;position:relative;
   }
   nav.desktop-nav a:hover{color:var(--primary-1);background:rgba(91,94,244,.08);}
-  .header-cta{display:flex;align-items:center;gap:12px;}
+  .header-cta{display:flex;align-items:center;gap:10px;}
+  .icon-toggle{
+    display:flex;align-items:center;justify-content:center;
+    width:42px;height:42px;border-radius:50%;flex-shrink:0;
+    background:rgba(91,94,244,.08);
+    border:1px solid rgba(91,94,244,.18);
+    color:var(--primary-1);font-weight:700;font-size:.8rem;letter-spacing:.02em;
+    transition:all .3s ease;
+  }
+  .icon-toggle:hover{background:rgba(91,94,244,.16);transform:translateY(-2px) rotate(-6deg);}
+  #themeToggle{font-size:1.05rem;}
   .burger{display:none;flex-direction:column;gap:5px;padding:10px;z-index:1100;}
   .burger span{width:24px;height:2px;background:var(--ink);border-radius:2px;transition:all .35s ease;}
   .burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
@@ -130,7 +166,7 @@
     background:
       radial-gradient(1200px 600px at 15% -10%, rgba(91,94,244,.18), transparent 60%),
       radial-gradient(900px 500px at 100% 0%, rgba(34,211,238,.16), transparent 55%),
-      linear-gradient(180deg,#f7f8fc 0%, #eef0fb 100%);
+      linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
     overflow:hidden;
   }
   .hero::before{
@@ -167,6 +203,7 @@
     position:absolute;background:var(--card);border-radius:18px;box-shadow:var(--shadow-lg);
     padding:18px 20px;display:flex;align-items:center;gap:12px;
     animation:floaty 6s ease-in-out infinite;
+    transition:background .4s ease;
   }
   .float-card .icon{
     width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;
@@ -228,7 +265,7 @@
   .card{
     background:var(--card);border-radius:var(--radius);padding:32px 28px;
     box-shadow:var(--shadow-sm);border:1px solid var(--line);
-    transition:transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease, border-color .4s ease;
+    transition:transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease, border-color .4s ease, background .4s ease;
   }
   .card:hover{transform:translateY(-8px);box-shadow:var(--shadow-lg);border-color:transparent;}
   .prog-icon{
@@ -286,7 +323,7 @@
   .instructor-card{
     background:var(--card);border-radius:var(--radius);overflow:hidden;text-align:center;
     box-shadow:var(--shadow-sm);border:1px solid var(--line);
-    transition:transform .4s ease, box-shadow .4s ease;
+    transition:transform .4s ease, box-shadow .4s ease, background .4s ease;
   }
   .instructor-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-md);}
   .instructor-photo{
@@ -303,13 +340,14 @@
 
   /* ---------- Testimonials ---------- */
   .testimonials-wrap{
-    background:linear-gradient(180deg,#fff,#f1f2fb);
+    background:linear-gradient(180deg, var(--bg), var(--bg-alt));
+    transition:background .4s ease;
   }
   .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;}
   .testi-card{
     background:var(--card);border-radius:var(--radius);padding:30px;
     box-shadow:var(--shadow-sm);border:1px solid var(--line);
-    transition:transform .4s ease, box-shadow .4s ease;
+    transition:transform .4s ease, box-shadow .4s ease, background .4s ease;
   }
   .testi-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-md);}
   .stars{color:#f59e0b;font-size:1rem;margin-bottom:14px;letter-spacing:2px;}
@@ -328,7 +366,7 @@
     background:var(--card);border-radius:var(--radius);padding:38px 30px;
     border:1px solid var(--line);box-shadow:var(--shadow-sm);
     display:flex;flex-direction:column;
-    transition:transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease;
+    transition:transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease, background .4s ease;
     position:relative;
   }
   .price-card:hover{transform:translateY(-8px);box-shadow:var(--shadow-lg);}
@@ -362,10 +400,12 @@
   .faq-item{
     background:var(--card);border-radius:16px;border:1px solid var(--line);overflow:hidden;
     box-shadow:var(--shadow-sm);
+    transition:background .4s ease;
   }
   .faq-q{
     display:flex;justify-content:space-between;align-items:center;
     padding:20px 24px;font-weight:600;font-size:.98rem;
+    gap:16px;
   }
   .faq-q .plus{
     width:26px;height:26px;border-radius:50%;background:rgba(91,94,244,.1);color:var(--primary-1);
@@ -507,113 +547,115 @@
       Nexora <span class="grad-text">Academy</span>
     </a>
     <nav class="desktop-nav">
-      <a href="#programs">Formations</a>
-      <a href="#why">Pourquoi nous</a>
-      <a href="#instructors">Formateurs</a>
-      <a href="#pricing">Tarifs</a>
-      <a href="#faq">FAQ</a>
-      <a href="#contact">Contact</a>
+      <a href="#programs" data-i18n="nav_programs">Formations</a>
+      <a href="#why" data-i18n="nav_why">Pourquoi nous</a>
+      <a href="#instructors" data-i18n="nav_instructors">Formateurs</a>
+      <a href="#pricing" data-i18n="nav_pricing">Tarifs</a>
+      <a href="#faq" data-i18n="nav_faq">FAQ</a>
+      <a href="#contact" data-i18n="nav_contact">Contact</a>
     </nav>
     <div class="header-cta">
-      <a href="#contact" class="btn btn-primary">S'inscrire</a>
+      <button class="icon-toggle" id="langToggle" aria-label="Switch language" title="Switch language">EN</button>
+      <button class="icon-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+      <a href="#contact" class="btn btn-primary" data-i18n="nav_cta">S'inscrire</a>
       <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
   </div>
 </header>
 
 <div class="mobile-nav" id="mobileNav">
-  <a href="#programs">Formations</a>
-  <a href="#why">Pourquoi nous</a>
-  <a href="#instructors">Formateurs</a>
-  <a href="#pricing">Tarifs</a>
-  <a href="#faq">FAQ</a>
-  <a href="#contact">Contact</a>
-  <a href="#contact" class="btn btn-primary">S'inscrire</a>
+  <a href="#programs" data-i18n="nav_programs">Formations</a>
+  <a href="#why" data-i18n="nav_why">Pourquoi nous</a>
+  <a href="#instructors" data-i18n="nav_instructors">Formateurs</a>
+  <a href="#pricing" data-i18n="nav_pricing">Tarifs</a>
+  <a href="#faq" data-i18n="nav_faq">FAQ</a>
+  <a href="#contact" data-i18n="nav_contact">Contact</a>
+  <a href="#contact" class="btn btn-primary" data-i18n="nav_cta">S'inscrire</a>
 </div>
 
 <section class="hero" id="home">
   <div class="container hero-grid">
     <div class="hero-copy">
-      <div class="eyebrow"><span class="pulse"></span> Centre certifié · Sessions 2026 ouvertes</div>
-      <h1>Faites évoluer votre carrière avec des <span class="grad-text">formations impeccables</span></h1>
-      <p class="lead">Nexora Academy forme les talents de demain en tech, management et langues, avec des formateurs experts et un accompagnement personnalisé jusqu'à l'emploi.</p>
+      <div class="eyebrow"><span class="pulse"></span> <span data-i18n="hero_eyebrow">Centre certifié · Sessions 2026 ouvertes</span></div>
+      <h1 data-i18n-html="hero_h1">Faites évoluer votre carrière avec des <span class="grad-text">formations impeccables</span></h1>
+      <p class="lead" data-i18n="hero_lead">Nexora Academy forme les talents de demain en tech, management et langues, avec des formateurs experts et un accompagnement personnalisé jusqu'à l'emploi.</p>
       <div class="hero-ctas">
-        <a href="#programs" class="btn btn-primary">Découvrir les formations</a>
-        <a href="#contact" class="btn btn-ghost">Réserver un appel gratuit</a>
+        <a href="#programs" class="btn btn-primary" data-i18n="hero_cta1">Découvrir les formations</a>
+        <a href="#contact" class="btn btn-ghost" data-i18n="hero_cta2">Réserver un appel gratuit</a>
       </div>
       <div class="hero-trust">
-        <div class="trust-item"><b class="counter" data-target="4200">0</b><span>Diplômés formés</span></div>
-        <div class="trust-item"><b class="counter" data-target="32">0</b><span>Formations expertes</span></div>
-        <div class="trust-item"><b class="counter" data-target="97">0</b><span>% de satisfaction</span></div>
+        <div class="trust-item"><b class="counter" data-target="4200">0</b><span data-i18n="trust_grads">Diplômés formés</span></div>
+        <div class="trust-item"><b class="counter" data-target="32">0</b><span data-i18n="trust_programs">Formations expertes</span></div>
+        <div class="trust-item"><b class="counter" data-target="97">0</b><span data-i18n="trust_satisfaction">% de satisfaction</span></div>
       </div>
     </div>
     <div class="hero-visual">
       <div class="hero-blob"></div>
-      <div class="float-card fc-1"><div class="icon">🎓</div><div><b style="display:block;">Certification</b><span style="font-size:.8rem;color:var(--ink-soft);">Reconnue par l'État</span></div></div>
-      <div class="float-card fc-2"><div class="icon">👩‍💻</div><div><b style="display:block;">100% Pratique</b><span style="font-size:.8rem;color:var(--ink-soft);">Projets réels</span></div></div>
-      <div class="float-card fc-3"><div class="icon">💼</div><div><b style="display:block;">Accompagnement</b><span style="font-size:.8rem;color:var(--ink-soft);">Jusqu'à l'emploi</span></div></div>
+      <div class="float-card fc-1"><div class="icon">🎓</div><div><b style="display:block;" data-i18n="fc1_title">Certification</b><span style="font-size:.8rem;color:var(--ink-soft);" data-i18n="fc1_sub">Reconnue par l'État</span></div></div>
+      <div class="float-card fc-2"><div class="icon">👩‍💻</div><div><b style="display:block;" data-i18n="fc2_title">100% Pratique</b><span style="font-size:.8rem;color:var(--ink-soft);" data-i18n="fc2_sub">Projets réels</span></div></div>
+      <div class="float-card fc-3"><div class="icon">💼</div><div><b style="display:block;" data-i18n="fc3_title">Accompagnement</b><span style="font-size:.8rem;color:var(--ink-soft);" data-i18n="fc3_sub">Jusqu'à l'emploi</span></div></div>
     </div>
   </div>
 </section>
 
 <div class="stats-band">
   <div class="container stats-grid">
-    <div class="stat reveal"><b class="counter" data-target="4200">0</b><span>Apprenants formés</span></div>
-    <div class="stat reveal" style="transition-delay:.1s"><b class="counter" data-target="32">0</b><span>Programmes certifiants</span></div>
-    <div class="stat reveal" style="transition-delay:.2s"><b class="counter" data-target="18">0</b><span>Formateurs experts</span></div>
-    <div class="stat reveal" style="transition-delay:.3s"><b class="counter" data-target="97" data-suffix="%">0</b><span>Taux de satisfaction</span></div>
+    <div class="stat reveal"><b class="counter" data-target="4200">0</b><span data-i18n="stats_learners">Apprenants formés</span></div>
+    <div class="stat reveal" style="transition-delay:.1s"><b class="counter" data-target="32">0</b><span data-i18n="stats_programs">Programmes certifiants</span></div>
+    <div class="stat reveal" style="transition-delay:.2s"><b class="counter" data-target="18">0</b><span data-i18n="stats_instructors">Formateurs experts</span></div>
+    <div class="stat reveal" style="transition-delay:.3s"><b class="counter" data-target="97" data-suffix="%">0</b><span data-i18n="stats_satisfaction">Taux de satisfaction</span></div>
   </div>
 </div>
 
 <section id="programs">
   <div class="container">
     <div class="section-head reveal">
-      <div class="eyebrow" style="display:inline-flex;">Nos formations</div>
-      <h2>Des parcours pensés pour votre réussite</h2>
-      <p>Des formations courtes et intensives, conçues avec des professionnels du secteur, pour vous rendre opérationnel rapidement.</p>
+      <div class="eyebrow" style="display:inline-flex;" data-i18n="programs_eyebrow">Nos formations</div>
+      <h2 data-i18n="programs_h2">Des parcours pensés pour votre réussite</h2>
+      <p data-i18n="programs_p">Des formations courtes et intensives, conçues avec des professionnels du secteur, pour vous rendre opérationnel rapidement.</p>
     </div>
     <div class="programs-grid stagger">
       <div class="card p1 reveal" style="--i:0">
         <div class="prog-icon">💻</div>
-        <h3>Développement Web</h3>
-        <p>HTML, CSS, JavaScript, React et Node.js — construisez des applications modernes de A à Z.</p>
-        <div class="card-meta"><span class="badge">12 semaines</span><a href="#contact" class="card-link">En savoir plus →</a></div>
+        <h3 data-i18n="p1_title">Développement Web</h3>
+        <p data-i18n="p1_desc">HTML, CSS, JavaScript, React et Node.js — construisez des applications modernes de A à Z.</p>
+        <div class="card-meta"><span class="badge" data-i18n="p1_badge">12 semaines</span><a href="#contact" class="card-link" data-i18n="card_link">En savoir plus →</a></div>
       </div>
       <div class="card p2 reveal" style="--i:1">
         <div class="prog-icon">📊</div>
-        <h3>Data & Business Intelligence</h3>
-        <p>Excel avancé, Power BI, SQL et Python pour transformer la donnée en décisions stratégiques.</p>
-        <div class="card-meta"><span class="badge">10 semaines</span><a href="#contact" class="card-link">En savoir plus →</a></div>
+        <h3 data-i18n="p2_title">Data & Business Intelligence</h3>
+        <p data-i18n="p2_desc">Excel avancé, Power BI, SQL et Python pour transformer la donnée en décisions stratégiques.</p>
+        <div class="card-meta"><span class="badge" data-i18n="p2_badge">10 semaines</span><a href="#contact" class="card-link" data-i18n="card_link">En savoir plus →</a></div>
       </div>
       <div class="card p3 reveal" style="--i:2">
         <div class="prog-icon">📈</div>
-        <h3>Management & Leadership</h3>
-        <p>Gestion de projet, PMP, communication et leadership pour piloter vos équipes avec impact.</p>
-        <div class="card-meta"><span class="badge">8 semaines</span><a href="#contact" class="card-link">En savoir plus →</a></div>
+        <h3 data-i18n="p3_title">Management & Leadership</h3>
+        <p data-i18n="p3_desc">Gestion de projet, PMP, communication et leadership pour piloter vos équipes avec impact.</p>
+        <div class="card-meta"><span class="badge" data-i18n="p3_badge">8 semaines</span><a href="#contact" class="card-link" data-i18n="card_link">En savoir plus →</a></div>
       </div>
       <div class="card p4 reveal" style="--i:3">
         <div class="prog-icon">🌐</div>
-        <h3>Langues & Communication</h3>
-        <p>Anglais professionnel, français des affaires et prise de parole en public.</p>
-        <div class="card-meta"><span class="badge">6 semaines</span><a href="#contact" class="card-link">En savoir plus →</a></div>
+        <h3 data-i18n="p4_title">Langues & Communication</h3>
+        <p data-i18n="p4_desc">Anglais professionnel, français des affaires et prise de parole en public.</p>
+        <div class="card-meta"><span class="badge" data-i18n="p4_badge">6 semaines</span><a href="#contact" class="card-link" data-i18n="card_link">En savoir plus →</a></div>
       </div>
       <div class="card p5 reveal" style="--i:4">
         <div class="prog-icon">🎨</div>
-        <h3>Design UI/UX</h3>
-        <p>Figma, design systems et recherche utilisateur pour concevoir des produits centrés utilisateur.</p>
-        <div class="card-meta"><span class="badge">9 semaines</span><a href="#contact" class="card-link">En savoir plus →</a></div>
+        <h3 data-i18n="p5_title">Design UI/UX</h3>
+        <p data-i18n="p5_desc">Figma, design systems et recherche utilisateur pour concevoir des produits centrés utilisateur.</p>
+        <div class="card-meta"><span class="badge" data-i18n="p5_badge">9 semaines</span><a href="#contact" class="card-link" data-i18n="card_link">En savoir plus →</a></div>
       </div>
       <div class="card p6 reveal" style="--i:5">
         <div class="prog-icon">🔐</div>
-        <h3>Cybersécurité</h3>
-        <p>Sécurité réseau, tests d'intrusion et sensibilisation pour protéger les systèmes d'information.</p>
-        <div class="card-meta"><span class="badge">11 semaines</span><a href="#contact" class="card-link">En savoir plus →</a></div>
+        <h3 data-i18n="p6_title">Cybersécurité</h3>
+        <p data-i18n="p6_desc">Sécurité réseau, tests d'intrusion et sensibilisation pour protéger les systèmes d'information.</p>
+        <div class="card-meta"><span class="badge" data-i18n="p6_badge">11 semaines</span><a href="#contact" class="card-link" data-i18n="card_link">En savoir plus →</a></div>
       </div>
     </div>
   </div>
 </section>
 
-<section id="why" style="background:linear-gradient(180deg,#fff,#f1f2fb);">
+<section id="why">
   <div class="container why-wrap">
     <div class="why-visual reveal">
       <div class="ring ring1"></div>
@@ -621,24 +663,24 @@
       <div class="core">🚀</div>
     </div>
     <div class="why-copy reveal">
-      <div class="eyebrow" style="display:inline-flex;">Pourquoi Nexora Academy</div>
-      <h2 style="font-size:clamp(1.8rem,3.4vw,2.6rem);font-weight:800;margin:0 0 18px;">L'excellence pédagogique, à chaque étape</h2>
+      <div class="eyebrow" style="display:inline-flex;" data-i18n="why_eyebrow">Pourquoi Nexora Academy</div>
+      <h2 style="font-size:clamp(1.8rem,3.4vw,2.6rem);font-weight:800;margin:0 0 18px;" data-i18n="why_h2">L'excellence pédagogique, à chaque étape</h2>
       <div class="feature-list">
         <div class="feature-item">
           <div class="f-icon">👨‍🏫</div>
-          <div><h4>Formateurs experts en activité</h4><p>Nos intervenants sont des professionnels reconnus qui partagent une expérience terrain concrète.</p></div>
+          <div><h4 data-i18n="f1_title">Formateurs experts en activité</h4><p data-i18n="f1_desc">Nos intervenants sont des professionnels reconnus qui partagent une expérience terrain concrète.</p></div>
         </div>
         <div class="feature-item">
           <div class="f-icon">🛠️</div>
-          <div><h4>Apprentissage par la pratique</h4><p>80% du temps de formation est consacré à des projets réels et des études de cas.</p></div>
+          <div><h4 data-i18n="f2_title">Apprentissage par la pratique</h4><p data-i18n="f2_desc">80% du temps de formation est consacré à des projets réels et des études de cas.</p></div>
         </div>
         <div class="feature-item">
           <div class="f-icon">🤝</div>
-          <div><h4>Accompagnement personnalisé</h4><p>Suivi individuel, coaching carrière et mise en relation avec notre réseau d'entreprises partenaires.</p></div>
+          <div><h4 data-i18n="f3_title">Accompagnement personnalisé</h4><p data-i18n="f3_desc">Suivi individuel, coaching carrière et mise en relation avec notre réseau d'entreprises partenaires.</p></div>
         </div>
         <div class="feature-item">
           <div class="f-icon">📜</div>
-          <div><h4>Certification reconnue</h4><p>Obtenez une certification valorisée par les recruteurs à l'issue de chaque parcours.</p></div>
+          <div><h4 data-i18n="f4_title">Certification reconnue</h4><p data-i18n="f4_desc">Obtenez une certification valorisée par les recruteurs à l'issue de chaque parcours.</p></div>
         </div>
       </div>
     </div>
@@ -648,26 +690,26 @@
 <section id="instructors">
   <div class="container">
     <div class="section-head reveal">
-      <div class="eyebrow" style="display:inline-flex;">Notre équipe</div>
-      <h2>Des formateurs passionnés et expérimentés</h2>
-      <p>Une équipe pédagogique triée sur le volet, alliant expertise académique et expérience professionnelle.</p>
+      <div class="eyebrow" style="display:inline-flex;" data-i18n="instructors_eyebrow">Notre équipe</div>
+      <h2 data-i18n="instructors_h2">Des formateurs passionnés et expérimentés</h2>
+      <p data-i18n="instructors_p">Une équipe pédagogique triée sur le volet, alliant expertise académique et expérience professionnelle.</p>
     </div>
     <div class="instructors-grid stagger">
       <div class="instructor-card reveal" style="--i:0">
         <div class="instructor-photo in-1">S</div>
-        <div class="instructor-body"><h4>Sarra Ben Ali</h4><span>Développement Web</span><p>10 ans d'expérience chez des startups tech.</p></div>
+        <div class="instructor-body"><h4>Sarra Ben Ali</h4><span data-i18n="in1_role">Développement Web</span><p data-i18n="in1_desc">10 ans d'expérience chez des startups tech.</p></div>
       </div>
       <div class="instructor-card reveal" style="--i:1">
         <div class="instructor-photo in-2">K</div>
-        <div class="instructor-body"><h4>Karim Meddeb</h4><span>Data & BI</span><p>Ex-Data Lead, spécialiste Power BI &amp; SQL.</p></div>
+        <div class="instructor-body"><h4>Karim Meddeb</h4><span data-i18n="in2_role">Data & BI</span><p data-i18n="in2_desc">Ex-Data Lead, spécialiste Power BI &amp; SQL.</p></div>
       </div>
       <div class="instructor-card reveal" style="--i:2">
         <div class="instructor-photo in-3">L</div>
-        <div class="instructor-body"><h4>Lina Trabelsi</h4><span>Management de projet</span><p>Certifiée PMP, coach en leadership.</p></div>
+        <div class="instructor-body"><h4>Lina Trabelsi</h4><span data-i18n="in3_role">Management de projet</span><p data-i18n="in3_desc">Certifiée PMP, coach en leadership.</p></div>
       </div>
       <div class="instructor-card reveal" style="--i:3">
         <div class="instructor-photo in-4">Y</div>
-        <div class="instructor-body"><h4>Youssef Amri</h4><span>UI/UX Design</span><p>Designer produit pour des scale-ups internationales.</p></div>
+        <div class="instructor-body"><h4>Youssef Amri</h4><span data-i18n="in4_role">UI/UX Design</span><p data-i18n="in4_desc">Designer produit pour des scale-ups internationales.</p></div>
       </div>
     </div>
   </div>
@@ -676,33 +718,33 @@
 <section id="testimonials" class="testimonials-wrap">
   <div class="container">
     <div class="section-head reveal">
-      <div class="eyebrow" style="display:inline-flex;">Témoignages</div>
-      <h2>Ce que disent nos anciens apprenants</h2>
-      <p>Des parcours qui ont transformé des carrières.</p>
+      <div class="eyebrow" style="display:inline-flex;" data-i18n="testi_eyebrow">Témoignages</div>
+      <h2 data-i18n="testi_h2">Ce que disent nos anciens apprenants</h2>
+      <p data-i18n="testi_p">Des parcours qui ont transformé des carrières.</p>
     </div>
     <div class="testi-grid stagger">
       <div class="testi-card reveal" style="--i:0">
         <div class="stars">★★★★★</div>
-        <p class="quote">"La formation en développement web m'a permis de décrocher un poste en CDI trois semaines après ma certification."</p>
+        <p class="quote" data-i18n="t1_quote">"La formation en développement web m'a permis de décrocher un poste en CDI trois semaines après ma certification."</p>
         <div class="testi-person">
           <div class="testi-avatar" style="background:linear-gradient(135deg,#5b5ef4,#8b5cf6);">A</div>
-          <div><b>Amine Ferjani</b><span>Développeur Front-End</span></div>
+          <div><b>Amine Ferjani</b><span data-i18n="t1_role">Développeur Front-End</span></div>
         </div>
       </div>
       <div class="testi-card reveal" style="--i:1">
         <div class="stars">★★★★★</div>
-        <p class="quote">"Un encadrement exceptionnel et des formateurs toujours disponibles. Je recommande à 100%."</p>
+        <p class="quote" data-i18n="t2_quote">"Un encadrement exceptionnel et des formateurs toujours disponibles. Je recommande à 100%."</p>
         <div class="testi-person">
           <div class="testi-avatar" style="background:linear-gradient(135deg,#22d3ee,#0ea5e9);">M</div>
-          <div><b>Mariem Chaabane</b><span>Analyste Data</span></div>
+          <div><b>Mariem Chaabane</b><span data-i18n="t2_role">Analyste Data</span></div>
         </div>
       </div>
       <div class="testi-card reveal" style="--i:2">
         <div class="stars">★★★★★</div>
-        <p class="quote">"Grâce au coaching carrière, j'ai pu changer complètement de métier en moins de 6 mois."</p>
+        <p class="quote" data-i18n="t3_quote">"Grâce au coaching carrière, j'ai pu changer complètement de métier en moins de 6 mois."</p>
         <div class="testi-person">
           <div class="testi-avatar" style="background:linear-gradient(135deg,#f97316,#f59e0b);">H</div>
-          <div><b>Hedi Bouzid</b><span>Chef de projet</span></div>
+          <div><b>Hedi Bouzid</b><span data-i18n="t3_role">Chef de projet</span></div>
         </div>
       </div>
     </div>
@@ -712,79 +754,79 @@
 <section id="pricing">
   <div class="container">
     <div class="section-head reveal">
-      <div class="eyebrow" style="display:inline-flex;">Tarifs</div>
-      <h2>Des formules adaptées à vos objectifs</h2>
-      <p>Choisissez la formule qui correspond à votre rythme et vos ambitions.</p>
+      <div class="eyebrow" style="display:inline-flex;" data-i18n="pricing_eyebrow">Tarifs</div>
+      <h2 data-i18n="pricing_h2">Des formules adaptées à vos objectifs</h2>
+      <p data-i18n="pricing_p">Choisissez la formule qui correspond à votre rythme et vos ambitions.</p>
     </div>
     <div class="pricing-grid stagger">
       <div class="price-card reveal" style="--i:0">
-        <div class="plan-name">Essentiel</div>
-        <div class="plan-desc">Pour découvrir un domaine à votre rythme</div>
+        <div class="plan-name" data-i18n="plan1_name">Essentiel</div>
+        <div class="plan-desc" data-i18n="plan1_desc">Pour découvrir un domaine à votre rythme</div>
         <div class="plan-price">290<sup>DT</sup></div>
-        <div class="plan-period">par module</div>
+        <div class="plan-period" data-i18n="plan1_period">par module</div>
         <ul class="price-list">
-          <li><span class="tick">✓</span> Accès à 1 formation</li>
-          <li><span class="tick">✓</span> Support de cours numérique</li>
-          <li><span class="tick">✓</span> Accès communauté</li>
-          <li><span class="tick">✓</span> Certificat de participation</li>
+          <li><span class="tick">✓</span> <span data-i18n="plan1_li1">Accès à 1 formation</span></li>
+          <li><span class="tick">✓</span> <span data-i18n="plan1_li2">Support de cours numérique</span></li>
+          <li><span class="tick">✓</span> <span data-i18n="plan1_li3">Accès communauté</span></li>
+          <li><span class="tick">✓</span> <span data-i18n="plan1_li4">Certificat de participation</span></li>
         </ul>
-        <a href="#contact" class="btn btn-ghost" style="justify-content:center;">Choisir cette offre</a>
+        <a href="#contact" class="btn btn-ghost" style="justify-content:center;" data-i18n="plan1_btn">Choisir cette offre</a>
       </div>
       <div class="price-card featured reveal" style="--i:1">
-        <div class="popular-tag">Le plus populaire</div>
-        <div class="plan-name">Professionnel</div>
-        <div class="plan-desc">Le parcours complet vers la certification</div>
+        <div class="popular-tag" data-i18n="popular_tag">Le plus populaire</div>
+        <div class="plan-name" data-i18n="plan2_name">Professionnel</div>
+        <div class="plan-desc" data-i18n="plan2_desc">Le parcours complet vers la certification</div>
         <div class="plan-price">890<sup>DT</sup></div>
-        <div class="plan-period">par programme</div>
+        <div class="plan-period" data-i18n="plan2_period">par programme</div>
         <ul class="price-list">
-          <li><span class="tick">✓</span> Accès illimité au programme</li>
-          <li><span class="tick">✓</span> Projets encadrés</li>
-          <li><span class="tick">✓</span> Coaching carrière individuel</li>
-          <li><span class="tick">✓</span> Certification officielle</li>
-          <li><span class="tick">✓</span> Mise en relation entreprises</li>
+          <li><span class="tick">✓</span> <span data-i18n="plan2_li1">Accès illimité au programme</span></li>
+          <li><span class="tick">✓</span> <span data-i18n="plan2_li2">Projets encadrés</span></li>
+          <li><span class="tick">✓</span> <span data-i18n="plan2_li3">Coaching carrière individuel</span></li>
+          <li><span class="tick">✓</span> <span data-i18n="plan2_li4">Certification officielle</span></li>
+          <li><span class="tick">✓</span> <span data-i18n="plan2_li5">Mise en relation entreprises</span></li>
         </ul>
-        <a href="#contact" class="btn btn-primary" style="justify-content:center;">Choisir cette offre</a>
+        <a href="#contact" class="btn btn-primary" style="justify-content:center;" data-i18n="plan2_btn">Choisir cette offre</a>
       </div>
       <div class="price-card reveal" style="--i:2">
-        <div class="plan-name">Entreprise</div>
-        <div class="plan-desc">Formation sur-mesure pour vos équipes</div>
-        <div class="plan-price">Sur devis</div>
-        <div class="plan-period">tarif personnalisé</div>
+        <div class="plan-name" data-i18n="plan3_name">Entreprise</div>
+        <div class="plan-desc" data-i18n="plan3_desc">Formation sur-mesure pour vos équipes</div>
+        <div class="plan-price" data-i18n="plan3_price">Sur devis</div>
+        <div class="plan-period" data-i18n="plan3_period">tarif personnalisé</div>
         <ul class="price-list">
-          <li><span class="tick">✓</span> Programme sur-mesure</li>
-          <li><span class="tick">✓</span> Formation en présentiel ou distanciel</li>
-          <li><span class="tick">✓</span> Suivi de progression d'équipe</li>
-          <li><span class="tick">✓</span> Rapport d'impact détaillé</li>
+          <li><span class="tick">✓</span> <span data-i18n="plan3_li1">Programme sur-mesure</span></li>
+          <li><span class="tick">✓</span> <span data-i18n="plan3_li2">Formation en présentiel ou distanciel</span></li>
+          <li><span class="tick">✓</span> <span data-i18n="plan3_li3">Suivi de progression d'équipe</span></li>
+          <li><span class="tick">✓</span> <span data-i18n="plan3_li4">Rapport d'impact détaillé</span></li>
         </ul>
-        <a href="#contact" class="btn btn-ghost" style="justify-content:center;">Nous contacter</a>
+        <a href="#contact" class="btn btn-ghost" style="justify-content:center;" data-i18n="plan3_btn">Nous contacter</a>
       </div>
     </div>
   </div>
 </section>
 
-<section id="faq" style="background:linear-gradient(180deg,#fff,#f1f2fb);">
+<section id="faq">
   <div class="container">
     <div class="section-head reveal">
-      <div class="eyebrow" style="display:inline-flex;">FAQ</div>
-      <h2>Questions fréquentes</h2>
-      <p>Tout ce que vous devez savoir avant de vous inscrire.</p>
+      <div class="eyebrow" style="display:inline-flex;" data-i18n="faq_eyebrow">FAQ</div>
+      <h2 data-i18n="faq_h2">Questions fréquentes</h2>
+      <p data-i18n="faq_p">Tout ce que vous devez savoir avant de vous inscrire.</p>
     </div>
     <div class="faq-list reveal">
       <div class="faq-item">
-        <div class="faq-q">Les formations sont-elles disponibles à distance ?<span class="plus">+</span></div>
-        <div class="faq-a"><p>Oui, toutes nos formations sont disponibles en présentiel dans nos locaux ou en distanciel via notre plateforme d'apprentissage en ligne, avec un accompagnement identique.</p></div>
+        <div class="faq-q"><span data-i18n="faq1_q">Les formations sont-elles disponibles à distance ?</span><span class="plus">+</span></div>
+        <div class="faq-a"><p data-i18n="faq1_a">Oui, toutes nos formations sont disponibles en présentiel dans nos locaux ou en distanciel via notre plateforme d'apprentissage en ligne, avec un accompagnement identique.</p></div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">Ai-je besoin de prérequis pour m'inscrire ?<span class="plus">+</span></div>
-        <div class="faq-a"><p>Chaque formation précise son niveau requis. Beaucoup de nos parcours sont accessibles aux débutants motivés, sans expérience préalable.</p></div>
+        <div class="faq-q"><span data-i18n="faq2_q">Ai-je besoin de prérequis pour m'inscrire ?</span><span class="plus">+</span></div>
+        <div class="faq-a"><p data-i18n="faq2_a">Chaque formation précise son niveau requis. Beaucoup de nos parcours sont accessibles aux débutants motivés, sans expérience préalable.</p></div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">La certification est-elle reconnue par les employeurs ?<span class="plus">+</span></div>
-        <div class="faq-a"><p>Oui, nos certifications sont élaborées avec nos entreprises partenaires et reconnues sur le marché de l'emploi local et régional.</p></div>
+        <div class="faq-q"><span data-i18n="faq3_q">La certification est-elle reconnue par les employeurs ?</span><span class="plus">+</span></div>
+        <div class="faq-a"><p data-i18n="faq3_a">Oui, nos certifications sont élaborées avec nos entreprises partenaires et reconnues sur le marché de l'emploi local et régional.</p></div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">Proposez-vous des facilités de paiement ?<span class="plus">+</span></div>
-        <div class="faq-a"><p>Oui, un paiement en plusieurs fois est possible pour l'ensemble de nos formules. Contactez notre équipe pour en savoir plus.</p></div>
+        <div class="faq-q"><span data-i18n="faq4_q">Proposez-vous des facilités de paiement ?</span><span class="plus">+</span></div>
+        <div class="faq-a"><p data-i18n="faq4_a">Oui, un paiement en plusieurs fois est possible pour l'ensemble de nos formules. Contactez notre équipe pour en savoir plus.</p></div>
       </div>
     </div>
   </div>
@@ -794,48 +836,48 @@
   <div class="container">
     <div class="contact-wrap reveal">
       <div class="contact-info">
-        <div class="eyebrow" style="display:inline-flex;background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#fff;">Contactez-nous</div>
-        <h2>Prêt à démarrer votre formation ?</h2>
-        <p>Remplissez le formulaire et un conseiller pédagogique vous recontactera sous 24h pour vous orienter vers le parcours idéal.</p>
-        <div class="contact-detail"><div class="c-icon">📍</div><div><b>Adresse</b><span>Avenue Habib Bourguiba, Tunis, Tunisie</span></div></div>
-        <div class="contact-detail"><div class="c-icon">📞</div><div><b>Téléphone</b><span>+216 70 123 456</span></div></div>
-        <div class="contact-detail"><div class="c-icon">✉️</div><div><b>Email</b><span>contact@nexora-academy.tn</span></div></div>
+        <div class="eyebrow" style="display:inline-flex;background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#fff;" data-i18n="contact_eyebrow">Contactez-nous</div>
+        <h2 data-i18n="contact_h2">Prêt à démarrer votre formation ?</h2>
+        <p data-i18n="contact_p">Remplissez le formulaire et un conseiller pédagogique vous recontactera sous 24h pour vous orienter vers le parcours idéal.</p>
+        <div class="contact-detail"><div class="c-icon">📍</div><div><b data-i18n="contact_addr_label">Adresse</b><span data-i18n="contact_addr_value">Avenue Habib Bourguiba, Tunis, Tunisie</span></div></div>
+        <div class="contact-detail"><div class="c-icon">📞</div><div><b data-i18n="contact_phone_label">Téléphone</b><span>+216 70 123 456</span></div></div>
+        <div class="contact-detail"><div class="c-icon">✉️</div><div><b data-i18n="contact_email_label">Email</b><span>contact@nexora-academy.tn</span></div></div>
       </div>
       <form class="contact-form" id="contactForm" novalidate>
         <div class="field" id="field-name">
-          <label for="name">Nom complet</label>
-          <input type="text" id="name" placeholder="Votre nom">
-          <span class="err-msg">Merci d'indiquer votre nom complet.</span>
+          <label for="name" data-i18n="form_name_label">Nom complet</label>
+          <input type="text" id="name" placeholder="Votre nom" data-i18n-placeholder="form_name_placeholder">
+          <span class="err-msg" data-i18n="form_name_err">Merci d'indiquer votre nom complet.</span>
         </div>
         <div class="field" id="field-email">
-          <label for="email">Email</label>
-          <input type="email" id="email" placeholder="vous@exemple.com">
-          <span class="err-msg">Merci d'indiquer une adresse email valide.</span>
+          <label for="email" data-i18n="form_email_label">Email</label>
+          <input type="email" id="email" placeholder="vous@exemple.com" data-i18n-placeholder="form_email_placeholder">
+          <span class="err-msg" data-i18n="form_email_err">Merci d'indiquer une adresse email valide.</span>
         </div>
         <div class="field" id="field-program">
-          <label for="program">Formation souhaitée</label>
+          <label for="program" data-i18n="form_program_label">Formation souhaitée</label>
           <select id="program">
-            <option value="">Choisissez une formation</option>
-            <option>Développement Web</option>
-            <option>Data & Business Intelligence</option>
-            <option>Management & Leadership</option>
-            <option>Langues & Communication</option>
-            <option>Design UI/UX</option>
-            <option>Cybersécurité</option>
+            <option value="" data-i18n="form_program_placeholder">Choisissez une formation</option>
+            <option data-i18n="p1_title">Développement Web</option>
+            <option data-i18n="p2_title">Data & Business Intelligence</option>
+            <option data-i18n="p3_title">Management & Leadership</option>
+            <option data-i18n="p4_title">Langues & Communication</option>
+            <option data-i18n="p5_title">Design UI/UX</option>
+            <option data-i18n="p6_title">Cybersécurité</option>
           </select>
         </div>
         <div class="field" id="field-message">
-          <label for="message">Message</label>
-          <textarea id="message" rows="3" placeholder="Parlez-nous de votre projet..."></textarea>
-          <span class="err-msg">Merci d'ajouter un court message.</span>
+          <label for="message" data-i18n="form_message_label">Message</label>
+          <textarea id="message" rows="3" placeholder="Parlez-nous de votre projet..." data-i18n-placeholder="form_message_placeholder"></textarea>
+          <span class="err-msg" data-i18n="form_message_err">Merci d'ajouter un court message.</span>
         </div>
         <button type="submit" class="btn btn-primary submit-btn" id="submitBtn">
           <span class="spinner"></span>
-          <span class="btn-text">Envoyer ma demande</span>
+          <span class="btn-text" data-i18n="form_submit">Envoyer ma demande</span>
         </button>
         <div class="success-box" id="successBox">
           <div class="success-check">✓</div>
-          <div><b>Demande envoyée !</b><br><span style="font-size:.85rem;color:rgba(255,255,255,.7);">Un conseiller vous contactera très bientôt.</span></div>
+          <div><b data-i18n="form_success_title">Demande envoyée !</b><br><span style="font-size:.85rem;color:rgba(255,255,255,.7);" data-i18n="form_success_sub">Un conseiller vous contactera très bientôt.</span></div>
         </div>
       </form>
     </div>
@@ -847,7 +889,7 @@
     <div class="footer-grid">
       <div class="footer-brand">
         <a href="#home" class="brand" style="color:#fff;"><span class="logo-dot">N</span>Nexora Academy</a>
-        <p>Centre de formation professionnelle certifiant, dédié à l'employabilité et à la montée en compétences.</p>
+        <p data-i18n="footer_brand_desc">Centre de formation professionnelle certifiant, dédié à l'employabilité et à la montée en compétences.</p>
         <div class="footer-social">
           <a href="#" aria-label="Facebook">f</a>
           <a href="#" aria-label="LinkedIn">in</a>
@@ -855,35 +897,35 @@
         </div>
       </div>
       <div>
-        <h5>Formations</h5>
+        <h5 data-i18n="footer_col1_title">Formations</h5>
         <ul>
-          <li><a href="#programs">Développement Web</a></li>
-          <li><a href="#programs">Data & BI</a></li>
-          <li><a href="#programs">Management</a></li>
-          <li><a href="#programs">Design UI/UX</a></li>
+          <li><a href="#programs" data-i18n="p1_title">Développement Web</a></li>
+          <li><a href="#programs" data-i18n="p2_title">Data & Business Intelligence</a></li>
+          <li><a href="#programs" data-i18n="p3_title">Management & Leadership</a></li>
+          <li><a href="#programs" data-i18n="p5_title">Design UI/UX</a></li>
         </ul>
       </div>
       <div>
-        <h5>Centre</h5>
+        <h5 data-i18n="footer_col2_title">Centre</h5>
         <ul>
-          <li><a href="#why">À propos</a></li>
-          <li><a href="#instructors">Formateurs</a></li>
-          <li><a href="#pricing">Tarifs</a></li>
-          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#why" data-i18n="footer_about">À propos</a></li>
+          <li><a href="#instructors" data-i18n="nav_instructors">Formateurs</a></li>
+          <li><a href="#pricing" data-i18n="nav_pricing">Tarifs</a></li>
+          <li><a href="#faq" data-i18n="nav_faq">FAQ</a></li>
         </ul>
       </div>
       <div>
-        <h5>Contact</h5>
+        <h5 data-i18n="footer_col3_title">Contact</h5>
         <ul>
-          <li><a href="#contact">Avenue Habib Bourguiba, Tunis</a></li>
+          <li><a href="#contact" data-i18n="contact_addr_value">Avenue Habib Bourguiba, Tunis, Tunisie</a></li>
           <li><a href="tel:+21670123456">+216 70 123 456</a></li>
           <li><a href="mailto:contact@nexora-academy.tn">contact@nexora-academy.tn</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 Nexora Academy. Tous droits réservés.</span>
-      <span>Fait avec passion pour la formation professionnelle.</span>
+      <span data-i18n="footer_rights">© 2026 Nexora Academy. Tous droits réservés.</span>
+      <span data-i18n="footer_tagline">Fait avec passion pour la formation professionnelle.</span>
     </div>
   </div>
 </footer>
@@ -891,6 +933,173 @@
 <button class="scroll-top" id="scrollTop" aria-label="Retour en haut">↑</button>
 
 <script>
+  // ---------- Translations ----------
+  const translations = {
+    fr: {
+      nav_programs:"Formations", nav_why:"Pourquoi nous", nav_instructors:"Formateurs", nav_pricing:"Tarifs", nav_faq:"FAQ", nav_contact:"Contact", nav_cta:"S'inscrire",
+      hero_eyebrow:"Centre certifié · Sessions 2026 ouvertes",
+      hero_h1:'Faites évoluer votre carrière avec des <span class="grad-text">formations impeccables</span>',
+      hero_lead:"Nexora Academy forme les talents de demain en tech, management et langues, avec des formateurs experts et un accompagnement personnalisé jusqu'à l'emploi.",
+      hero_cta1:"Découvrir les formations", hero_cta2:"Réserver un appel gratuit",
+      trust_grads:"Diplômés formés", trust_programs:"Formations expertes", trust_satisfaction:"% de satisfaction",
+      fc1_title:"Certification", fc1_sub:"Reconnue par l'État",
+      fc2_title:"100% Pratique", fc2_sub:"Projets réels",
+      fc3_title:"Accompagnement", fc3_sub:"Jusqu'à l'emploi",
+      stats_learners:"Apprenants formés", stats_programs:"Programmes certifiants", stats_instructors:"Formateurs experts", stats_satisfaction:"Taux de satisfaction",
+      programs_eyebrow:"Nos formations", programs_h2:"Des parcours pensés pour votre réussite",
+      programs_p:"Des formations courtes et intensives, conçues avec des professionnels du secteur, pour vous rendre opérationnel rapidement.",
+      p1_title:"Développement Web", p1_desc:"HTML, CSS, JavaScript, React et Node.js — construisez des applications modernes de A à Z.", p1_badge:"12 semaines",
+      p2_title:"Data & Business Intelligence", p2_desc:"Excel avancé, Power BI, SQL et Python pour transformer la donnée en décisions stratégiques.", p2_badge:"10 semaines",
+      p3_title:"Management & Leadership", p3_desc:"Gestion de projet, PMP, communication et leadership pour piloter vos équipes avec impact.", p3_badge:"8 semaines",
+      p4_title:"Langues & Communication", p4_desc:"Anglais professionnel, français des affaires et prise de parole en public.", p4_badge:"6 semaines",
+      p5_title:"Design UI/UX", p5_desc:"Figma, design systems et recherche utilisateur pour concevoir des produits centrés utilisateur.", p5_badge:"9 semaines",
+      p6_title:"Cybersécurité", p6_desc:"Sécurité réseau, tests d'intrusion et sensibilisation pour protéger les systèmes d'information.", p6_badge:"11 semaines",
+      card_link:"En savoir plus →",
+      why_eyebrow:"Pourquoi Nexora Academy", why_h2:"L'excellence pédagogique, à chaque étape",
+      f1_title:"Formateurs experts en activité", f1_desc:"Nos intervenants sont des professionnels reconnus qui partagent une expérience terrain concrète.",
+      f2_title:"Apprentissage par la pratique", f2_desc:"80% du temps de formation est consacré à des projets réels et des études de cas.",
+      f3_title:"Accompagnement personnalisé", f3_desc:"Suivi individuel, coaching carrière et mise en relation avec notre réseau d'entreprises partenaires.",
+      f4_title:"Certification reconnue", f4_desc:"Obtenez une certification valorisée par les recruteurs à l'issue de chaque parcours.",
+      instructors_eyebrow:"Notre équipe", instructors_h2:"Des formateurs passionnés et expérimentés",
+      instructors_p:"Une équipe pédagogique triée sur le volet, alliant expertise académique et expérience professionnelle.",
+      in1_role:"Développement Web", in1_desc:"10 ans d'expérience chez des startups tech.",
+      in2_role:"Data & BI", in2_desc:"Ex-Data Lead, spécialiste Power BI & SQL.",
+      in3_role:"Management de projet", in3_desc:"Certifiée PMP, coach en leadership.",
+      in4_role:"UI/UX Design", in4_desc:"Designer produit pour des scale-ups internationales.",
+      testi_eyebrow:"Témoignages", testi_h2:"Ce que disent nos anciens apprenants", testi_p:"Des parcours qui ont transformé des carrières.",
+      t1_quote:"\"La formation en développement web m'a permis de décrocher un poste en CDI trois semaines après ma certification.\"", t1_role:"Développeur Front-End",
+      t2_quote:"\"Un encadrement exceptionnel et des formateurs toujours disponibles. Je recommande à 100%.\"", t2_role:"Analyste Data",
+      t3_quote:"\"Grâce au coaching carrière, j'ai pu changer complètement de métier en moins de 6 mois.\"", t3_role:"Chef de projet",
+      pricing_eyebrow:"Tarifs", pricing_h2:"Des formules adaptées à vos objectifs", pricing_p:"Choisissez la formule qui correspond à votre rythme et vos ambitions.",
+      plan1_name:"Essentiel", plan1_desc:"Pour découvrir un domaine à votre rythme", plan1_period:"par module",
+      plan1_li1:"Accès à 1 formation", plan1_li2:"Support de cours numérique", plan1_li3:"Accès communauté", plan1_li4:"Certificat de participation", plan1_btn:"Choisir cette offre",
+      popular_tag:"Le plus populaire",
+      plan2_name:"Professionnel", plan2_desc:"Le parcours complet vers la certification", plan2_period:"par programme",
+      plan2_li1:"Accès illimité au programme", plan2_li2:"Projets encadrés", plan2_li3:"Coaching carrière individuel", plan2_li4:"Certification officielle", plan2_li5:"Mise en relation entreprises", plan2_btn:"Choisir cette offre",
+      plan3_name:"Entreprise", plan3_desc:"Formation sur-mesure pour vos équipes", plan3_price:"Sur devis", plan3_period:"tarif personnalisé",
+      plan3_li1:"Programme sur-mesure", plan3_li2:"Formation en présentiel ou distanciel", plan3_li3:"Suivi de progression d'équipe", plan3_li4:"Rapport d'impact détaillé", plan3_btn:"Nous contacter",
+      faq_eyebrow:"FAQ", faq_h2:"Questions fréquentes", faq_p:"Tout ce que vous devez savoir avant de vous inscrire.",
+      faq1_q:"Les formations sont-elles disponibles à distance ?", faq1_a:"Oui, toutes nos formations sont disponibles en présentiel dans nos locaux ou en distanciel via notre plateforme d'apprentissage en ligne, avec un accompagnement identique.",
+      faq2_q:"Ai-je besoin de prérequis pour m'inscrire ?", faq2_a:"Chaque formation précise son niveau requis. Beaucoup de nos parcours sont accessibles aux débutants motivés, sans expérience préalable.",
+      faq3_q:"La certification est-elle reconnue par les employeurs ?", faq3_a:"Oui, nos certifications sont élaborées avec nos entreprises partenaires et reconnues sur le marché de l'emploi local et régional.",
+      faq4_q:"Proposez-vous des facilités de paiement ?", faq4_a:"Oui, un paiement en plusieurs fois est possible pour l'ensemble de nos formules. Contactez notre équipe pour en savoir plus.",
+      contact_eyebrow:"Contactez-nous", contact_h2:"Prêt à démarrer votre formation ?",
+      contact_p:"Remplissez le formulaire et un conseiller pédagogique vous recontactera sous 24h pour vous orienter vers le parcours idéal.",
+      contact_addr_label:"Adresse", contact_addr_value:"Avenue Habib Bourguiba, Tunis, Tunisie", contact_phone_label:"Téléphone", contact_email_label:"Email",
+      form_name_label:"Nom complet", form_name_placeholder:"Votre nom", form_name_err:"Merci d'indiquer votre nom complet.",
+      form_email_label:"Email", form_email_placeholder:"vous@exemple.com", form_email_err:"Merci d'indiquer une adresse email valide.",
+      form_program_label:"Formation souhaitée", form_program_placeholder:"Choisissez une formation",
+      form_message_label:"Message", form_message_placeholder:"Parlez-nous de votre projet...", form_message_err:"Merci d'ajouter un court message.",
+      form_submit:"Envoyer ma demande", form_success_title:"Demande envoyée !", form_success_sub:"Un conseiller vous contactera très bientôt.",
+      footer_brand_desc:"Centre de formation professionnelle certifiant, dédié à l'employabilité et à la montée en compétences.",
+      footer_col1_title:"Formations", footer_col2_title:"Centre", footer_col3_title:"Contact", footer_about:"À propos",
+      footer_rights:"© 2026 Nexora Academy. Tous droits réservés.", footer_tagline:"Fait avec passion pour la formation professionnelle."
+    },
+    en: {
+      nav_programs:"Programs", nav_why:"Why us", nav_instructors:"Instructors", nav_pricing:"Pricing", nav_faq:"FAQ", nav_contact:"Contact", nav_cta:"Enroll now",
+      hero_eyebrow:"Certified center · 2026 sessions open",
+      hero_h1:'Advance your career with <span class="grad-text">impeccable training</span>',
+      hero_lead:"Nexora Academy trains tomorrow's talent in tech, management and languages, with expert trainers and personalized support all the way to employment.",
+      hero_cta1:"Explore our programs", hero_cta2:"Book a free call",
+      trust_grads:"Graduates trained", trust_programs:"Expert programs", trust_satisfaction:"% satisfaction rate",
+      fc1_title:"Certification", fc1_sub:"State-recognized",
+      fc2_title:"100% Hands-on", fc2_sub:"Real projects",
+      fc3_title:"Support", fc3_sub:"Until you're hired",
+      stats_learners:"Learners trained", stats_programs:"Certified programs", stats_instructors:"Expert instructors", stats_satisfaction:"Satisfaction rate",
+      programs_eyebrow:"Our programs", programs_h2:"Career paths built for your success",
+      programs_p:"Short, intensive programs designed with industry professionals to make you job-ready fast.",
+      p1_title:"Web Development", p1_desc:"HTML, CSS, JavaScript, React and Node.js — build modern applications from scratch.", p1_badge:"12 weeks",
+      p2_title:"Data & Business Intelligence", p2_desc:"Advanced Excel, Power BI, SQL and Python to turn data into strategic decisions.", p2_badge:"10 weeks",
+      p3_title:"Management & Leadership", p3_desc:"Project management, PMP, communication and leadership to drive your teams with impact.", p3_badge:"8 weeks",
+      p4_title:"Languages & Communication", p4_desc:"Business English, professional French and public speaking.", p4_badge:"6 weeks",
+      p5_title:"UI/UX Design", p5_desc:"Figma, design systems and user research to design user-centered products.", p5_badge:"9 weeks",
+      p6_title:"Cybersecurity", p6_desc:"Network security, penetration testing and awareness to protect information systems.", p6_badge:"11 weeks",
+      card_link:"Learn more →",
+      why_eyebrow:"Why Nexora Academy", why_h2:"Teaching excellence, every step of the way",
+      f1_title:"Expert, active-industry instructors", f1_desc:"Our trainers are recognized professionals who share real, hands-on field experience.",
+      f2_title:"Learning by doing", f2_desc:"80% of training time is spent on real projects and case studies.",
+      f3_title:"Personalized support", f3_desc:"One-on-one follow-up, career coaching and introductions to our partner company network.",
+      f4_title:"Recognized certification", f4_desc:"Earn a certification valued by recruiters at the end of every program.",
+      instructors_eyebrow:"Our team", instructors_h2:"Passionate, experienced instructors",
+      instructors_p:"A hand-picked teaching team combining academic expertise and professional experience.",
+      in1_role:"Web Development", in1_desc:"10 years of experience at tech startups.",
+      in2_role:"Data & BI", in2_desc:"Former Data Lead, Power BI & SQL specialist.",
+      in3_role:"Project Management", in3_desc:"PMP-certified, leadership coach.",
+      in4_role:"UI/UX Design", in4_desc:"Product designer for international scale-ups.",
+      testi_eyebrow:"Testimonials", testi_h2:"What our alumni say", testi_p:"Career paths that changed lives.",
+      t1_quote:"\"The web development program helped me land a permanent position three weeks after certifying.\"", t1_role:"Front-End Developer",
+      t2_quote:"\"Exceptional support and instructors who are always available. I recommend it 100%.\"", t2_role:"Data Analyst",
+      t3_quote:"\"Thanks to career coaching, I completely changed careers in under 6 months.\"", t3_role:"Project Manager",
+      pricing_eyebrow:"Pricing", pricing_h2:"Plans built for your goals", pricing_p:"Choose the plan that matches your pace and ambitions.",
+      plan1_name:"Essential", plan1_desc:"To explore a field at your own pace", plan1_period:"per module",
+      plan1_li1:"Access to 1 program", plan1_li2:"Digital course materials", plan1_li3:"Community access", plan1_li4:"Certificate of participation", plan1_btn:"Choose this plan",
+      popular_tag:"Most popular",
+      plan2_name:"Professional", plan2_desc:"The full path to certification", plan2_period:"per program",
+      plan2_li1:"Unlimited program access", plan2_li2:"Mentored projects", plan2_li3:"One-on-one career coaching", plan2_li4:"Official certification", plan2_li5:"Company introductions", plan2_btn:"Choose this plan",
+      plan3_name:"Enterprise", plan3_desc:"Custom training for your teams", plan3_price:"Custom quote", plan3_period:"custom pricing",
+      plan3_li1:"Tailor-made program", plan3_li2:"On-site or remote training", plan3_li3:"Team progress tracking", plan3_li4:"Detailed impact report", plan3_btn:"Contact us",
+      faq_eyebrow:"FAQ", faq_h2:"Frequently asked questions", faq_p:"Everything you need to know before enrolling.",
+      faq1_q:"Are programs available remotely?", faq1_a:"Yes, all our programs are available on-site at our facilities or remotely through our online learning platform, with the same level of support.",
+      faq2_q:"Do I need prerequisites to enroll?", faq2_a:"Each program lists its required level. Many of our programs are accessible to motivated beginners with no prior experience.",
+      faq3_q:"Is the certification recognized by employers?", faq3_a:"Yes, our certifications are developed with our partner companies and recognized in the local and regional job market.",
+      faq4_q:"Do you offer payment plans?", faq4_a:"Yes, installment payments are available for all our plans. Contact our team to learn more.",
+      contact_eyebrow:"Contact us", contact_h2:"Ready to start your training?",
+      contact_p:"Fill out the form and an academic advisor will get back to you within 24h to guide you toward the right program.",
+      contact_addr_label:"Address", contact_addr_value:"Avenue Habib Bourguiba, Tunis, Tunisia", contact_phone_label:"Phone", contact_email_label:"Email",
+      form_name_label:"Full name", form_name_placeholder:"Your name", form_name_err:"Please enter your full name.",
+      form_email_label:"Email", form_email_placeholder:"you@example.com", form_email_err:"Please enter a valid email address.",
+      form_program_label:"Desired program", form_program_placeholder:"Choose a program",
+      form_message_label:"Message", form_message_placeholder:"Tell us about your project...", form_message_err:"Please add a short message.",
+      form_submit:"Send my request", form_success_title:"Request sent!", form_success_sub:"An advisor will contact you shortly.",
+      footer_brand_desc:"A certified professional training center dedicated to employability and upskilling.",
+      footer_col1_title:"Programs", footer_col2_title:"Center", footer_col3_title:"Contact", footer_about:"About",
+      footer_rights:"© 2026 Nexora Academy. All rights reserved.", footer_tagline:"Made with passion for professional training."
+    }
+  };
+
+  const langToggle = document.getElementById('langToggle');
+  let currentLang = localStorage.getItem('lang') || 'fr';
+
+  function applyTranslations(lang){
+    const dict = translations[lang];
+    document.documentElement.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (dict[key] !== undefined) el.textContent = dict[key];
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      const key = el.getAttribute('data-i18n-html');
+      if (dict[key] !== undefined) el.innerHTML = dict[key];
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.getAttribute('data-i18n-placeholder');
+      if (dict[key] !== undefined) el.setAttribute('placeholder', dict[key]);
+    });
+    langToggle.textContent = lang === 'fr' ? 'EN' : 'FR';
+    localStorage.setItem('lang', lang);
+    document.querySelectorAll('.faq-item.open .faq-a').forEach(a => {
+      a.style.maxHeight = a.scrollHeight + 'px';
+    });
+  }
+  applyTranslations(currentLang);
+  langToggle.addEventListener('click', () => {
+    currentLang = currentLang === 'fr' ? 'en' : 'fr';
+    applyTranslations(currentLang);
+  });
+
+  // ---------- Theme toggle ----------
+  const themeToggle = document.getElementById('themeToggle');
+  function applyTheme(theme){
+    document.documentElement.setAttribute('data-theme', theme);
+    themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+    localStorage.setItem('theme', theme);
+  }
+  applyTheme(document.documentElement.getAttribute('data-theme') || 'light');
+  themeToggle.addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+  });
+
   // Header scroll state
   const header = document.getElementById('site-header');
   const scrollTopBtn = document.getElementById('scrollTop');
